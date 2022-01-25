@@ -1,0 +1,795 @@
+@charset "utf-8";
+
+/*=========================================
+# mixin
+=========================================*/
+
+//マップ型変数breakpointsを定義
+$breakpoints: (
+//キー　　値
+  'sp': 'screen and (max-width: 767px)', //767px以下（スマホ）用の表示
+  'md': 'screen and (min-width: 768px)' //768px以上（タブレット・PC）用の表示
+) !default;
+
+//メディアクエリ用のmixinを定義。デフォ値はmd
+@mixin mq($breakpoint: md) {
+//map-get(マップ型変数, キー)で値を取得
+  @media #{map-get($breakpoints, $breakpoint)} {
+    //この中をカスタムできる
+    @content;
+  }
+}
+
+/*このように @media screen and (width: 767px) { } を書かなくても、
+PC用のcssを書きながらスマホ用の表示を書き足すことができます！ */
+
+
+
+/*=========================================
+# color
+=========================================*/
+
+$primary-color:#000;
+$font-color:#333;
+
+
+
+
+
+/*=========================================
+# common
+=========================================*/
+
+ @include mq(md) {
+     .is-sp {
+         display: none;
+     }
+ }
+
+ @include mq(sp) {
+    .is-md {
+        display: none;
+    }
+}
+
+body {
+    font-size: 16px;
+    color: $font-color;
+    font-family: "ヒラギノ明朝, ProN", serif;
+    line-height: 1.6785;
+}
+
+img {
+    width: 100%;
+}
+
+.inner {
+    max-width:1300px;
+    margin: 0 auto;
+    padding: 0 40px;
+    //reset.cssでbox-sizingを指定しているので、paddingを含めて１２００pxになってしまっている。
+    //この場合、しっかりpaddingはついているものの要素が指定したよりも小さくなるという弊害がある。（padding分を引くから）
+    box-sizing: content-box;
+    //そのためデフォルトのcontent-boxに戻す。
+
+    @include mq(sp) {
+        padding: 0 15px;
+    }
+}
+
+.section {
+    margin-top: 160px;
+
+    @include mq(sp) {
+        margin-top: 96px;
+    }
+}
+
+/* util
+=================================================*/
+
+
+
+.util-link {
+    //buttonのcssねこれ。buttonタグのcssは重要だよ！！
+    font-size: 14px;
+    letter-spacing: .1em;
+    //   デザインカンプがある時のletter-spacingの求め方はAV/sizeということを覚えとこう。
+    color: $primary-color;
+    border: solid 1px $primary-color; 
+    background: #fff;
+    display: inline-block;
+    //block要素にするとborderが画面幅いっぱいに広がってしまうからinline-blockね。
+    padding: 10px 54px;
+    transition: background-color .4s,color .4s;
+
+    &.-active {
+        background: $primary-color;
+        color:#fff;
+    }
+
+    @include mq(md) {
+    &:not(.-submit) {
+        &:hover {
+             background: $primary-color;
+             color:#fff;
+            }
+        }
+    }
+  }
+
+  /*========= 背景動画設定のCSS ===============*/
+
+
+  #main{
+    position: relative;/*h1の中央寄せ配置の起点とするためのrelative*/
+    height: 100vh;/*高さを全画面にあわせる*/
+} 
+
+#video-area {
+    position: fixed;
+    z-index: -1;/*最背面に設定*/
+    top: 0;
+    right:0;
+    left:0;
+    bottom:0;
+    overflow: hidden;
+}
+
+#video {
+    /*天地中央配置*/
+    position: absolute;
+    z-index: -1;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /*縦横幅指定*/
+    width: 177.77777778vh; /* 16:9 の幅→16 ÷ 9＝ 177.77% */
+    height: 56.25vw; /* 16:9の幅 → 9 ÷ 16 = 56.25% */
+    min-height: 100%;
+    min-width: 100%;
+}
+
+/*見出し設定*/
+h1{
+    /*要素の配置*/
+    position:absolute;
+    /*要素を天地中央寄せ*/
+    top: 50%;
+    left: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    /*見た目の調整*/
+    color:#fff;
+    text-shadow: 0 0 15px #666;
+    font-size: 40px;
+
+    @include mq(sp) {
+       /*要素の配置*/
+    position:absolute;
+    /*要素を天地中央寄せ*/
+    top: 80%;
+    left: 40%;
+    font-size: 35px;
+    }
+}
+
+  
+  /*========= レイアウトのためのCSS ===============*/
+  
+  #container{
+    background:#F9F2E8;
+    padding: 50px 0 22px 0;
+    text-align: center;
+    
+  }
+
+  /* header
+=================================================*/
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background:#F9F2E8;
+
+  .drawer-hamburger {
+      .drawer--right  & {
+          right: 3px;
+      }
+  }
+
+  .drawer-hamburger-icon {
+      background: $primary-color;
+
+      .drawer-open & {
+          background: transparent;
+      }
+
+      &::before,
+      &::after {
+      background:  $primary-color;
+      }
+  }
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+
+  @include mq(sp) {
+      height: 60px;
+  }
+}
+
+
+.header-nav {
+  margin:0 auto;
+
+  @include mq(sp) {
+      top: 60px;
+      background-color: #665656;
+      padding: 24px 0;
+  }
+}
+
+.header-nav-list {
+  @include mq(md) {
+  display: flex;
+  }
+}
+
+.header-nav-item {
+  & + & {
+  //&:notと同じ意味
+  @include mq(md) {
+   margin-left: 46px;  
+  }    
+  }
+}
+
+.header-nav-item-link {
+  display: block;
+  //height,paddingの指定をしてあげるため。
+  color: $font-color;
+  height: 70px;
+  line-height: 70px;
+  //navではなく、aタグに対してline-heightを指定したのはクリック領域を大きくするため。
+  letter-spacing: .1em;
+  //デザインカンプがある時は文字サイズーletter-spacingでletter-spacingを求められるよ。
+
+  @include mq(sp) {
+      color:#fff;
+      font-size: 18px;
+     text-align: right;
+     padding: 0 15px;
+     height: 60px;
+     line-height: 60px;
+  }
+
+  @include mq(md) {
+      transition: transform .4s;
+      //.4秒をかけてscaleが変化する
+      &:hover {
+          transform: scale(1.07);
+      }
+  }
+
+}
+
+//gnavi
+
+.gnavi li a{
+  /*線の基点とするためrelativeを指定*/
+position: relative;
+}
+
+.gnavi li a::after {
+  content: '';
+  /*絶対配置で線の位置を決める*/
+  position: absolute;
+  top: 80%;
+  right: 6%;
+  /*線の形状*/
+  width: 31%;
+  height: 1px;
+  background: #F9F2E8;
+  /*アニメーションの指定*/
+  transition: all .3s;
+  transform: scale(0, 1);/*X方向0、Y方向1*/
+  transform-origin: center top;/*上部中央基点*/
+}
+
+/*現在地とhoverの設定*/
+.gnavi li.current a::after,
+.gnavi li a:hover::after {
+  transform: scale(1, 1);/*X方向にスケール拡大*/
+}
+
+
+/* concept
+=================================================*/
+
+.concept-inner {
+  margin: 64px 0;
+ 
+  @include mq(sp) {
+      margin:32px 0 0 ;
+  }
+
+  @include mq(md) {
+  display: flex;
+  align-items: center;
+  }
+}
+
+.concept-picture {
+  @include mq(md) {
+  flex: 0 0 45%;
+  }
+  //grow:横幅が余っている時勝手に拡大していいかどうかということ
+  //shrink: 横幅が足りない時、勝手に縮小していいいかどうかということ
+  //basis:基本の幅
+  //今回の場合はgrowとshrinkは0で基本の大きさは50%ということ。
+}
+
+
+.concept-message {
+
+  @include mq(sp) {
+  margin-top: 36px;
+  }
+
+  @include mq(md) {
+  flex: 0 1 50%;
+  //もし万が一に50%の幅が足りなかった場合は縮小してもいいよということ。
+  margin-left: 6.6667%;
+  //幅を８０pxに指定したいが、例えばタブレットの場合に８０pxは広すぎる。
+  //そのため全体（１２００px）から幅を取りたいpx分（８０px）を割って、１００をかけることで％で表す。
+  //こうすることで、タブレットの場合も全体からの同じ比率で表示される。
+  background: #fff;
+  margin-top: 80px;
+  padding: 10px 0;
+}
+  }
+  
+
+.concept-message-title {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.concept-message-text {
+  margin-top: 36px;
+
+  @include mq(sp) {
+      margin-top: 20px;
+  }
+}
+
+.concept-inner2 {
+  flex-direction: row-reverse; /* 横並び逆順 */
+}
+
+.concept-message2 {
+    margin-right: 6.6667%;
+    margin-left: 0;
+}
+
+
+
+ /* multi-images
+=================================================*/
+
+.multi-article {
+  margin-top: 150px;
+
+  @include mq(sp) {
+    margin-top: 50px;
+}
+}
+
+
+.multi-article-images {
+  display: flex;
+
+  @include mq(sp) {
+    display: inline-block;
+}
+
+   
+}
+
+.multi-article-image {
+
+  position: relative;
+  opacity: .8;
+  transition: all 1s;
+
+  &:hover {
+    opacity: 1;
+  }
+
+  @include mq(md) {
+  width: 214.67%;
+  }
+  
+    a {
+      img {
+        height: 700px;
+        object-fit: cover;
+
+        @include mq(sp) {
+          width: 375px;
+          height: 200px;
+          }
+      }
+    }
+}
+
+.article-text {
+
+  color: #fff;
+
+  @include mq(md) {
+  position: absolute;
+  content: "";
+  bottom: 0;
+  left: 0;
+  margin: 25px;
+
+   p {
+      margin-top: 20px;
+      font-size: 1rem;
+      font-weight: 500;
+      text-align:left;
+    }
+    h2 {
+      margin-top: 20px;
+      font-size: 2.3rem;
+
+    }
+
+  }
+
+  @include mq(sp) {
+  position: absolute;
+  content: "";
+  bottom: 0;
+  left: 0;
+  margin: 12px;
+
+  p {
+    margin-top: 10px;
+    font-size: .5rem;
+    font-weight: 250;
+    text-align:left;
+  }
+  h2 {
+    margin-top: 10px;
+    font-size: 1.1rem;
+
+  }
+
+  }
+
+   
+}
+
+.article-title-crumb {
+    p {
+      span {
+
+      }
+    }
+}
+
+.copy-text {
+  p {
+
+  }
+}
+
+//module
+
+.module_layer-text {
+  padding:50px;
+  display: inline-block;
+  text-align: left;
+
+  
+}
+
+
+.module--stories h4 {
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  line-height: 1.75em;
+  color: #888;
+  font-weight: 400;
+  margin-top: 0;
+  text-transform: uppercase;
+  
+  @include mq(md) {
+    margin-bottom: 40px;
+  }
+
+}
+
+.module--stories h3 {
+  font-weight: 400;
+  font-size: 25px;
+  letter-spacing: 0.02em;
+
+  @include mq(md) {
+  font-size: 33px;
+      line-height: 63px;
+      margin-bottom: 40px;
+  }
+
+}
+
+.module--stories p {
+  color: #888;
+  margin-bottom: 40px;
+
+  @include mq(sp) {
+    margin-bottom: 20px;
+    font-size: 13px;
+ }
+}
+
+.module--stories a {
+  color: #000;
+  text-decoration: underline;
+
+  @include mq(sp) {
+    font-size: 13px;
+}
+}
+
+.last-module {
+  background-color: #fff;
+  margin-top: 160px;   
+  display: block;
+
+  @include mq(sp) {
+    margin-top: 80px;
+}
+
+}
+
+
+/* news
+=================================================*/
+
+.news {
+  max-width: 1100px;
+
+  @include mq(sp) {
+      padding: 0 32px;
+  }
+}
+
+.news-list {
+  margin-top: 28px;
+
+  @include mq(sp) {
+      margin-top: 25px;
+  }
+
+}
+
+.news-item {
+  border-bottom: 2px solid #e0e0e0;
+}
+
+.news-item-link {
+
+  color: $font-color;
+  padding: 22px 0;
+  display: block;
+  //paddingを適用させるためにdisplay: block;
+
+  @include mq(md) {
+  display: flex;
+  align-items: center;
+
+  &:hover {
+      .news-item-picture > img {
+          transform: translate(-50%,-50%) scale(1.05) ;
+      }
+  }
+  }
+ 
+}
+
+.news-item-header {
+  @include mq(md) {
+  flex:0 0 260px;
+  }
+}
+
+.news-item-picture {
+  padding-top: 61.5385%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 5px;
+  > img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      transition: transform .4s;
+  }
+}
+
+.news-item-body {
+  word-break: break-all;
+  //半角の英字の場合、文章は折り返すことができずにレイアウトからはみ出してしまう。
+  //これを指定すれば直る。
+
+  @include mq(sp) {
+  margin-top: 21px;
+  }
+  @include mq(md) {
+  flex:0 1 100%;
+  margin-left: 40px;
+  }
+} 
+
+.news-item-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-top: 4px;
+
+  @include mq(sp) {
+      font-size: 16px;
+  }
+}
+
+.news-item-text {
+  color: #888;
+  margin-top: 16px;
+  line-height: 1.7143;
+  //デザインカンプがある時のline-heightの求め方
+  //文字幅/size*100
+
+}
+
+.news-footer {
+  text-align: center;
+  margin-top: 48px;
+  margin-bottom: 160px;
+
+  @include mq(sp) {
+    margin-bottom: 80px; 
+}
+
+}
+
+
+
+/* footer
+=================================================*/
+
+.footer {
+  padding: 42px 40px 12px;
+  border-top: 2px solid #000;
+
+  @include mq(sp) {
+      padding: 36px 0 14px;
+  }
+
+}
+
+.footer-logo {
+  width: auto;
+  margin: 0 auto;
+}
+
+.footer-nav-list {
+
+  @include mq(md) {
+      display: flex;
+      justify-content: center;
+  }
+
+  @include mq(sp) {
+      text-align: center;
+      margin-top: 16px;
+  }
+  margin-top: 8px;
+
+}
+
+.footer-nav-item {
+
+  @include mq(md) {
+    transition: transform .4s;
+    //.4秒をかけてscaleが変化する
+    &:hover {
+        transform: scale(1.07);
+    }
+}
+
+  & + & {
+      @include mq(md) {
+      margin-left: 30px;
+      }
+  }
+}
+
+.footer-nav-item-link {
+  font-size: 12px;
+  color: $font-color;
+  display: block;
+  padding: 1em 0;
+
+  @include mq(sp) {
+      padding: .3em 0;
+  }
+
+  @include mq(md) {
+      transition: opacity.4s;
+      &:hover {
+          opacity: .7;
+      }
+  }
+
+}
+
+.footer-sns-list {
+  text-align: center;
+
+  @include mq(sp) {
+     margin-top: 14px;
+  }
+}
+
+.footer-sns-item {
+  display: inline-block;
+
+  & + & {
+      margin-left: 10px;
+  }
+
+  @include mq(md) {
+    transition: transform .4s;
+    //.4秒をかけてscaleが変化する
+    &:hover {
+        transform: scale(1.07);
+    }
+}
+
+}
+
+.footer-sns-item-link {
+  color: $primary-color;
+  font-size: 24px;
+  display: block;
+  padding: .1em .5em;
+
+  @include mq(md) {
+      transition: opacity.4s;
+      &:hover {
+          opacity: .7;
+      }
+  }
+
+}
+
+.footer-copyright {
+
+  color: #888;
+  font-size: 12px;
+  text-align: center;
+  margin-top: 10px;
+
+  @include mq(sp) {
+      margin-top: 5px;
+  }
+}
+
+
